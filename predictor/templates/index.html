@@ -4,21 +4,29 @@
     <meta charset="UTF-8">
     <title>Predicción Titanic</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
-<body class="bg-gray-100 flex justify-center items-center min-h-screen">
-    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h1 class="text-2xl font-bold mb-6 text-center">Titanic Survival Predictor</h1>
+<body class="bg-gradient-to-br from-blue-200 via-indigo-200 to-purple-200 min-h-screen flex items-center justify-center">
 
-        <!-- Resultado de la predicción -->
+    <div class="backdrop-blur-xl bg-white/30 shadow-2xl rounded-2xl p-8 w-full max-w-lg border border-white/40">
+        <div class="text-center mb-6">
+            <i class="ph ph-anchor-simple text-4xl text-indigo-600"></i>
+            <h1 class="text-3xl font-extrabold text-gray-800 mt-2">Titanic Survival Predictor</h1>
+            <p class="text-gray-600 text-sm">Predice tus probabilidades de sobrevivir al Titanic 🛳️</p>
+        </div>
+
+        <!-- Resultado -->
         {% if prediction %}
             {% if pred == 1 %}
-                <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">
-            {% else %}
-                <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">
-            {% endif %}
-                    {{ prediction }}
+                <div class="mb-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-800 rounded-md animate-fade-in">
+                    <i class="ph ph-smiley mr-1"></i> {{ prediction }}
                 </div>
-            <p class="text-sm text-gray-500 mb-4">Precisión del modelo: {{ accuracy }}%</p>
+            {% else %}
+                <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-800 rounded-md animate-fade-in">
+                    <i class="ph ph-warning mr-1"></i> {{ prediction }}
+                </div>
+            {% endif %}
+            <p class="text-sm text-gray-600 mb-4 text-center">🎯 Precisión del modelo: <strong>{{ accuracy }}%</strong></p>
         {% endif %}
 
         <!-- Formulario -->
@@ -26,42 +34,49 @@
             {% csrf_token %}
 
             <div>
-                <label class="block font-medium mb-1">Clase del ticket</label>
-                <input name="Pclass" type="number" min="1" max="3" placeholder="1=Primera, 2=Segunda, 3=Tercera" required class="w-full p-2 border rounded"/>
+                <label class="block font-semibold mb-1 text-gray-700">Clase del ticket</label>
+                <input name="Pclass" type="number" min="1" max="3" placeholder="1 = Primera, 2 = Segunda, 3 = Tercera"
+                    required class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400">
             </div>
 
             <div>
-                <label class="block font-medium mb-1">Sexo</label>
-                <select name="Sex" required class="w-full p-2 border rounded">
+                <label class="block font-semibold mb-1 text-gray-700">Sexo</label>
+                <select name="Sex" required class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400">
                     <option value="">Selecciona</option>
                     <option value="male">Masculino</option>
                     <option value="female">Femenino</option>
                 </select>
             </div>
 
-            <div>
-                <label class="block font-medium mb-1">Edad</label>
-                <input name="Age" type="number" min="0" placeholder="Edad en años" required class="w-full p-2 border rounded"/>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-semibold mb-1 text-gray-700">Edad</label>
+                    <input name="Age" type="number" min="0" placeholder="Años" required
+                        class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1 text-gray-700">Tarifa</label>
+                    <input name="Fare" type="number" step="0.01" min="0" placeholder="USD" required
+                        class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-semibold mb-1 text-gray-700">Hermanos / Cónyuge</label>
+                    <input name="SibSp" type="number" min="0" placeholder="Número" required
+                        class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1 text-gray-700">Padres / Hijos</label>
+                    <input name="Parch" type="number" min="0" placeholder="Número" required
+                        class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                </div>
             </div>
 
             <div>
-                <label class="block font-medium mb-1">Hermanos / Cónyuge a bordo</label>
-                <input name="SibSp" type="number" min="0" placeholder="Número de hermanos y/o cónyuge" required class="w-full p-2 border rounded"/>
-            </div>
-
-            <div>
-                <label class="block font-medium mb-1">Padres / Hijos a bordo</label>
-                <input name="Parch" type="number" min="0" placeholder="Número de padres e hijos" required class="w-full p-2 border rounded"/>
-            </div>
-
-            <div>
-                <label class="block font-medium mb-1">Tarifa del ticket</label>
-                <input name="Fare" type="number" min="0" step="0.01" placeholder="Precio pagado por el ticket (USD)" required class="w-full p-2 border rounded"/>
-            </div>
-
-            <div>
-                <label class="block font-medium mb-1">Puerto de embarque</label>
-                <select name="Embarked" required class="w-full p-2 border rounded">
+                <label class="block font-semibold mb-1 text-gray-700">Puerto de embarque</label>
+                <select name="Embarked" required class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400">
                     <option value="">Selecciona</option>
                     <option value="C">Cherbourg</option>
                     <option value="Q">Queenstown</option>
@@ -69,8 +84,21 @@
                 </select>
             </div>
 
-            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Predecir</button>
+            <button id="predict-btn" type="submit"
+                class="w-full bg-indigo-600 text-white p-3 rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-200 flex items-center justify-center gap-2">
+                <i class="ph ph-magic-wand"></i> <span>Predecir</span>
+            </button>
         </form>
     </div>
+
+    <script>
+        // Animación de carga al presionar "Predecir"
+        const btn = document.getElementById('predict-btn');
+        btn.addEventListener('click', () => {
+            btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Procesando...';
+            btn.disabled = true;
+        });
+    </script>
+
 </body>
 </html>
