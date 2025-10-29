@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Predicción Titanic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center">Titanic Survival Predictor</h1>
+
+        <!-- Resultado de la predicción -->
+        {% if prediction %}
+            {% if pred == 1 %}
+                <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">
+            {% else %}
+                <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">
+            {% endif %}
+                    {{ prediction }}
+                </div>
+            <p class="text-sm text-gray-500 mb-4">Precisión del modelo: {{ accuracy }}%</p>
+        {% endif %}
+
+        <!-- Formulario -->
+        <form action="/predict/" method="POST" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label class="block font-medium mb-1">Clase del ticket</label>
+                <input name="Pclass" type="number" min="1" max="3" placeholder="1=Primera, 2=Segunda, 3=Tercera" required class="w-full p-2 border rounded"/>
+            </div>
+
+            <div>
+                <label class="block font-medium mb-1">Sexo</label>
+                <select name="Sex" required class="w-full p-2 border rounded">
+                    <option value="">Selecciona</option>
+                    <option value="male">Masculino</option>
+                    <option value="female">Femenino</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block font-medium mb-1">Edad</label>
+                <input name="Age" type="number" min="0" placeholder="Edad en años" required class="w-full p-2 border rounded"/>
+            </div>
+
+            <div>
+                <label class="block font-medium mb-1">Hermanos / Cónyuge a bordo</label>
+                <input name="SibSp" type="number" min="0" placeholder="Número de hermanos y/o cónyuge" required class="w-full p-2 border rounded"/>
+            </div>
+
+            <div>
+                <label class="block font-medium mb-1">Padres / Hijos a bordo</label>
+                <input name="Parch" type="number" min="0" placeholder="Número de padres e hijos" required class="w-full p-2 border rounded"/>
+            </div>
+
+            <div>
+                <label class="block font-medium mb-1">Tarifa del ticket</label>
+                <input name="Fare" type="number" min="0" step="0.01" placeholder="Precio pagado por el ticket (USD)" required class="w-full p-2 border rounded"/>
+            </div>
+
+            <div>
+                <label class="block font-medium mb-1">Puerto de embarque</label>
+                <select name="Embarked" required class="w-full p-2 border rounded">
+                    <option value="">Selecciona</option>
+                    <option value="C">Cherbourg</option>
+                    <option value="Q">Queenstown</option>
+                    <option value="S">Southampton</option>
+                </select>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Predecir</button>
+        </form>
+    </div>
+</body>
+</html>
